@@ -17,10 +17,10 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-latest
+          - ubuntu-20.04
         include:
-          - os: ubuntu-latest
-            os_short: ubuntu-latest
+          - os: ubuntu-20.04
+            os_short: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
