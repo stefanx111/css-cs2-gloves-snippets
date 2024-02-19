@@ -36,7 +36,6 @@ jobs:
       - name: Prepare artifact
         run: |
           mkdir -p gloves_test
-          mv lang gloves_test
           mv bin/Debug/net7.0/* gloves_test
 
       - name: Create .zip artifact
