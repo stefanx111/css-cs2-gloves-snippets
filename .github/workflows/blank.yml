@@ -1,0 +1,49 @@
+name: Build
+on:
+  push:
+    paths-ignore:
+      - LICENSE
+      - README.md
+  pull_request:
+    paths-ignore:
+      - LICENSE
+      - README.md
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build on ${{ matrix.os_short }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        include:
+          - os: ubuntu-latest
+            os_short: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0'
+
+      - name: Build
+        run: dotnet build
+
+      - name: Prepare artifact
+        run: |
+          mkdir -p gloves_test
+          mv lang gloves_test
+          mv bin/Debug/net7.0/* gloves_test
+
+      - name: Create .zip artifact
+        run: zip -r ${{ github.event.repository.name }}.zip gloves_test/*
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}
+          path: ${{ github.event.repository.name }}.zip
